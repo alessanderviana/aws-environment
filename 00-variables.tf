@@ -1,6 +1,11 @@
 variable "region" {
   default = "us-east-2"
 }
+variable "zones" {
+  description = "AZs to use"
+  default = ["us-west-2a", "us-west-2b"]
+  type = "list"
+}
 variable "aws_profile" {
   default = "default"
 }
@@ -11,17 +16,15 @@ variable "vpc_range" {
 variable "vpc_name" {
   default = "vpc-alessander"
 }
-variable "pub_subnet1_range" {
-  default = "10.19.1.0/24"
+variable "pub_subnets_ranges" {
+  description = "Subnet CIDRs for public subnets (length must match configured availability_zones)"
+  default = ["10.19.1.0/24", "10.19.3.0/24"]
+  type = "list"
 }
-variable "pub_subnet2_range" {
-  default = "10.19.3.0/24"
-}
-variable "priv_subnet1_range" {
-  default = "10.19.2.0/24"
-}
-variable "priv_subnet2_range" {
-  default = "10.19.4.0/24"
+variable "priv_subnets_ranges" {
+  description = "Subnet CIDRs for private subnets (length must match configured availability_zones)"
+  default = ["10.19.2.0/24", "10.19.4.0/24"]
+  type = "list"
 }
 variable "ami_id" {
   default = "ami-6a003c0f"
@@ -30,5 +33,5 @@ variable "user" {
   default = "ubuntu"
 }
 variable "ssh_key" {
-  default = "~/terraform/alessander-tf.pub"
+  default = "~/repositorios/terraform/alessander-tf.pub"
 }

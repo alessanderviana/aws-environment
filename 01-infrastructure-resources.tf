@@ -16,48 +16,30 @@ resource "aws_vpc" "vpc" {
 }
 
 # Define the public subnets
-resource "aws_subnet" "pub-subnet-1" {
+resource "aws_subnet" "public-subnet" {
+  count = "${length(var.pub_subnets_ranges)}"
+
   vpc_id = "${aws_vpc.vpc.id}"
-  cidr_block = "${var.pub_subnet1_range}"
-  availability_zone = "${var.region}a"
+  cidr_block = "${var.pub_subnets_ranges[count.index]}"
+  availability_zone = "${var.zones[count.index]}"
   depends_on = ["aws_vpc.vpc"]
 
   tags {
-    Name = "Public Subnet 1"
-  }
-}
-
-resource "aws_subnet" "pub-subnet-2" {
-  vpc_id = "${aws_vpc.vpc.id}"
-  cidr_block = "${var.pub_subnet2_range}"
-  availability_zone = "${var.region}b"
-  depends_on = ["aws_vpc.vpc"]
-
-  tags {
-    Name = "Public Subnet 2"
+    Name = "Public Subnet ${count.index}"
   }
 }
 
 # Define the private subnets
-resource "aws_subnet" "priv-subnet-1" {
+resource "aws_subnet" "private-subnet" {
+  count = "${length(var.priv_subnets_ranges)}"
+
   vpc_id = "${aws_vpc.vpc.id}"
-  cidr_block = "${var.priv_subnet1_range}"
-  availability_zone = "${var.region}a"
+  cidr_block = "${var.priv_subnets_ranges[count.index]}"
+  availability_zone = "${var.zones[count.index]}"
   depends_on = ["aws_vpc.vpc"]
 
   tags {
-    Name = "Private Subnet 1"
-  }
-}
-
-resource "aws_subnet" "priv-subnet-2" {
-  vpc_id = "${aws_vpc.vpc.id}"
-  cidr_block = "${var.priv_subnet2_range}"
-  availability_zone = "${var.region}b"
-  depends_on = ["aws_vpc.vpc"]
-
-  tags {
-    Name = "Private Subnet 2"
+    Name = "Private Subnet ${count.index}"
   }
 }
 
@@ -86,12 +68,9 @@ resource "aws_route_table" "public-rt" {
 
 # Assign the route table to the public Subnets
 resource "aws_route_table_association" "public-rt" {
-  subnet_id = "${aws_subnet.pub_subnet1_range.id}"
-  route_table_id = "${aws_route_table.public-rt.id}"
-}
+  count = "${length(var.pub_subnets_ranges)}"
 
-resource "aws_route_table_association" "public-rt" {
-  subnet_id = "${aws_subnet.pub_subnet2_range.id}"
+  subnet_id      = "${element(aws_subnet.public-subnet.*.id, count.index)}"
   route_table_id = "${aws_route_table.public-rt.id}"
 }
 
@@ -99,20 +78,6 @@ resource "aws_route_table_association" "public-rt" {
 resource "aws_security_group" "sg_externo" {
   name = "sg_externo"
   description = "Allow incoming HTTP connections & SSH access"
-
-  ingress {
-    from_port = 2049
-    to_port = 2049
-    protocol = "tcp"
-    cidr_blocks = ["35.224.10.153/32"]
-  }
-
-  ingress {
-    from_port = 2049
-    to_port = 2049
-    protocol = "udp"
-    cidr_blocks = ["35.224.10.153/32"]
-  }
 
   ingress {
     from_port = 80
@@ -167,21 +132,21 @@ resource "aws_security_group" "sg_interno"{
     from_port = 3306
     to_port = 3306
     protocol = "tcp"
-    cidr_blocks = ["${var.pub_subnet_range}"]
+    cidr_blocks = ["${var.vpc_range}"]
   }
 
   ingress {
     from_port = -1
     to_port = -1
     protocol = "icmp"
-    cidr_blocks = ["${var.pub_subnet_range}"]
+    cidr_blocks = ["${var.vpc_range}"]
   }
 
   ingress {
     from_port = 22
     to_port = 22
     protocol = "tcp"
-    cidr_blocks = ["${var.pub_subnet_range}"]
+    cidr_blocks = ["${var.vpc_range}"]
   }
 
   egress {
