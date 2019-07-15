@@ -9,9 +9,9 @@ resource "aws_vpc" "vpc" {
   # dhcp_options_domain_name         = "service.dhcp"
   # dhcp_options_domain_name_servers = ["127.0.0.1", "192.168.20.2"]
 
-  tags = {
+  tags {
     Owner       = "${var.user}"
-    Name        = "${var.vpc_name}"
+    Name        = "VPC - ${var.cliente}"
   }
 }
 
@@ -25,7 +25,7 @@ resource "aws_subnet" "public-subnet" {
   depends_on = ["aws_vpc.vpc"]
 
   tags {
-    Name = "Public Subnet ${count.index}"
+    Name = "Public Subnet ${count.index + 1} - ${var.cliente}"
   }
 }
 
@@ -39,7 +39,7 @@ resource "aws_subnet" "private-subnet" {
   depends_on = ["aws_vpc.vpc"]
 
   tags {
-    Name = "Private Subnet ${count.index}"
+    Name = "Private Subnet ${count.index + 1} - ${var.cliente}"
   }
 }
 
@@ -48,11 +48,11 @@ resource "aws_internet_gateway" "tf-igw" {
   vpc_id = "${aws_vpc.vpc.id}"
 
   tags {
-    Name = "VPC TF-IGW"
+    Name = "IGW - ${var.cliente}"
   }
 }
 
-# Define the route table
+# Define the route tables
 resource "aws_route_table" "public-rt" {
   vpc_id = "${aws_vpc.vpc.id}"
 
@@ -62,11 +62,19 @@ resource "aws_route_table" "public-rt" {
   }
 
   tags {
-    Name = "Default RT"
+    Name = "Public Route Table - ${var.cliente}"
   }
 }
 
-# Assign the route table to the public Subnets
+resource "aws_route_table" "private-rt" {
+  vpc_id = "${aws_vpc.vpc.id}"
+
+  tags {
+    Name = "Private Route Table - ${var.cliente}"
+  }
+}
+
+# Assign the route table to the Subnets
 resource "aws_route_table_association" "public-rt" {
   count = "${length(var.pub_subnets_ranges)}"
 
@@ -74,9 +82,16 @@ resource "aws_route_table_association" "public-rt" {
   route_table_id = "${aws_route_table.public-rt.id}"
 }
 
+resource "aws_route_table_association" "private-rt" {
+  count = "${length(var.priv_subnets_ranges)}"
+
+  subnet_id      = "${element(aws_subnet.private-subnet.*.id, count.index)}"
+  route_table_id = "${aws_route_table.private-rt.id}"
+}
+
 # Define the security group for public subnets
 resource "aws_security_group" "sg_externo" {
-  name = "sg_externo"
+  name = "sg_externo_${var.cliente}"
   description = "Allow incoming HTTP connections & SSH access"
 
   ingress {
@@ -105,7 +120,7 @@ resource "aws_security_group" "sg_externo" {
     to_port = 22
     protocol = "tcp"
     # IP de casa (09/06/2018)
-    cidr_blocks =  ["191.185.214.17/32"]
+    cidr_blocks =  ["187.20.141.252/32"]
   }
 
   egress {
@@ -119,13 +134,13 @@ resource "aws_security_group" "sg_externo" {
   vpc_id="${aws_vpc.vpc.id}"
 
   tags {
-    Name = "SG Externo"
+    Name = "SG Externo - ${var.cliente}"
   }
 }
 
 # Define the security group for private subnet
 resource "aws_security_group" "sg_interno"{
-  name = "sg_interno"
+  name = "sg_interno_${var.cliente}"
   description = "Allow traffic from public subnet"
 
   ingress {
@@ -160,6 +175,6 @@ resource "aws_security_group" "sg_interno"{
   vpc_id = "${aws_vpc.vpc.id}"
 
   tags {
-    Name = "SG Interno"
+    Name = "SG Interno - ${var.cliente}"
   }
 }

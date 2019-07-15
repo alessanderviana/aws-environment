@@ -1,9 +1,12 @@
+variable "cliente" {
+  default = "terraform"
+}
 variable "region" {
-  default = "us-east-2"
+  default = "us-east-1"
 }
 variable "zones" {
   description = "AZs to use"
-  default = ["us-west-2a", "us-west-2b"]
+  default = ["us-east-1a", "us-east-1d"]
   type = "list"
 }
 variable "aws_profile" {
@@ -12,9 +15,6 @@ variable "aws_profile" {
 variable "vpc_range" {
   default = "10.19.0.0/21"
   # 10.19.0.1 - 10.19.7.254
-}
-variable "vpc_name" {
-  default = "vpc-alessander"
 }
 variable "pub_subnets_ranges" {
   description = "Subnet CIDRs for public subnets (length must match configured availability_zones)"
@@ -27,7 +27,7 @@ variable "priv_subnets_ranges" {
   type = "list"
 }
 variable "ami_id" {
-  default = "ami-6a003c0f"
+  default = "ami-026c8acd92718196b"
 }
 variable "user" {
   default = "ubuntu"

@@ -1,6 +1,6 @@
 # Define SSH key pair for our instances
 resource "aws_key_pair" "tf-key-pair" {
-  key_name = "terraform-key-pair"
+  key_name = "key-pair-${var.cliente}"
   public_key = "${file("${var.ssh_key}")}"
 }
 

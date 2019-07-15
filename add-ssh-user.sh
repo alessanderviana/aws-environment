@@ -12,7 +12,7 @@ adduser ${SSH_USER}
 # echo ${USER}:${PASSWORD} | chpasswd
 
 # Add the user to the respective group so they can sudo
-DISTRO=$( cat /proc/version | awk '{ print $9 }' )
+DISTRO=$( cat /proc/version | awk '{ print $8 }' )
 # DISTRO=$( hostnamectl | grep 'Operating System' | awk '{ print $3 }' )
 if [ "${DISTRO}" == "(Ubuntu" ]; then
   usermod -a -G sudo ${SSH_USER}

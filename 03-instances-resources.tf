@@ -15,11 +15,11 @@ resource "aws_instance" "ubuntu" {
    user_data = "${file("./add-ssh-user.sh")}"
 
    tags {
-    Name = "Ubuntu server 16.04 LTS"
-    Owner       = "${var.user}"
+    Name = "Ubuntu 1804 - ${var.cliente}"
+    Owner = "${var.user}"
   }
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+    # prevent_destroy = true
+  # }
 }
