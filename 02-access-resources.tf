@@ -21,5 +21,5 @@ resource "aws_iam_user" "tf-iam-user" {
 resource "aws_iam_user_ssh_key" "tf-key-user" {
   username   = "${aws_iam_user.tf-iam-user.name}"
   encoding   = "SSH"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHdy8fTUvaQ0sTsVZbrcirh3z0wcv9caobd4o7ief2RUSWRwBvfFkRvrvo7bYKswceSCzJJuuvklClEBfmlZg+YxPnK5gfX8Y+t43gSevpzdnuicN6bwoZScS8J0wOZ3e6wBZ3wpPMPfmI/iJFprmxRM3umhZ8U/9XpbhGZkK5WwMEqQi6yQiP0owq8UVoEOyfg5wquRPL4iQhoYLjQCW9fDXvX4IqkBn+5PCE+dxUng1vTIOgVmVd6HNrub9R15fJ7eBXHpzC9ydABSuo+Ie5aSgQ49FfVecQNDDCasZskp+srL5Yb/SuVBvOlUzih/1TgA0s5tbqTBYfLOx4DNeb"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5X3M1ngJgLxb94B8nU4cv/ODdq0DoR/joraTUCst9FL6bQP6WN11jBhZMmI/TrAjXeBj1whN2w3Ydy+aRHYEnpXNTj5tCOydivcRvIXRhPb6e9GFhaOjOwcvm6uTJLQEZCzOo0upXQMfO7DLnBbo5XzqeJoCouH/zpuRe46jauUsu/OtCCnj1jDowo8IBXp8SwZZEpAtJVh4yeGjFOcDah7Myc4IJharl6jT58he8PxNkP9STkComKrMAo02gp0BUzeyfcCNCULpp8qQVP9sso4u6sRrNOrsfLi1y4uLo1iFQvtrf9sGhFcGBNLDE/Js00rnkbB7pwpVVTX3X5+Wh"
 }

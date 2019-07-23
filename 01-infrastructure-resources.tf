@@ -9,7 +9,7 @@ resource "aws_vpc" "vpc" {
   # dhcp_options_domain_name         = "service.dhcp"
   # dhcp_options_domain_name_servers = ["127.0.0.1", "192.168.20.2"]
 
-  tags {
+  tags = {
     Owner       = "${var.user}"
     Name        = "VPC - ${var.cliente}"
   }
@@ -24,7 +24,7 @@ resource "aws_subnet" "public-subnet" {
   availability_zone = "${var.zones[count.index]}"
   depends_on = ["aws_vpc.vpc"]
 
-  tags {
+  tags = {
     Name = "Public Subnet ${count.index + 1} - ${var.cliente}"
   }
 }
@@ -38,7 +38,7 @@ resource "aws_subnet" "private-subnet" {
   availability_zone = "${var.zones[count.index]}"
   depends_on = ["aws_vpc.vpc"]
 
-  tags {
+  tags = {
     Name = "Private Subnet ${count.index + 1} - ${var.cliente}"
   }
 }
@@ -47,7 +47,7 @@ resource "aws_subnet" "private-subnet" {
 resource "aws_internet_gateway" "tf-igw" {
   vpc_id = "${aws_vpc.vpc.id}"
 
-  tags {
+  tags = {
     Name = "IGW - ${var.cliente}"
   }
 }
@@ -61,7 +61,7 @@ resource "aws_route_table" "public-rt" {
     gateway_id = "${aws_internet_gateway.tf-igw.id}"
   }
 
-  tags {
+  tags = {
     Name = "Public Route Table - ${var.cliente}"
   }
 }
@@ -69,7 +69,7 @@ resource "aws_route_table" "public-rt" {
 resource "aws_route_table" "private-rt" {
   vpc_id = "${aws_vpc.vpc.id}"
 
-  tags {
+  tags = {
     Name = "Private Route Table - ${var.cliente}"
   }
 }
@@ -120,7 +120,7 @@ resource "aws_security_group" "sg_externo" {
     to_port = 22
     protocol = "tcp"
     # IP de casa (09/06/2018)
-    cidr_blocks =  ["187.20.141.252/32"]
+    cidr_blocks =  ["177.157.175.93/32"]
   }
 
   egress {
@@ -133,7 +133,7 @@ resource "aws_security_group" "sg_externo" {
 
   vpc_id="${aws_vpc.vpc.id}"
 
-  tags {
+  tags = {
     Name = "SG Externo - ${var.cliente}"
   }
 }
@@ -174,7 +174,7 @@ resource "aws_security_group" "sg_interno"{
 
   vpc_id = "${aws_vpc.vpc.id}"
 
-  tags {
+  tags = {
     Name = "SG Interno - ${var.cliente}"
   }
 }

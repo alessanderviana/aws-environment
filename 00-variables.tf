@@ -1,20 +1,19 @@
 variable "cliente" {
-  default = "terraform"
+  default = "RDS-MySQL"
 }
 variable "region" {
-  default = "us-east-1"
+  default = "us-east-2"
 }
 variable "zones" {
   description = "AZs to use"
-  default = ["us-east-1a", "us-east-1d"]
+  default = ["us-east-2a", "us-east-2c"]
   type = "list"
 }
 variable "aws_profile" {
-  default = "default"
+  default = "emaster"
 }
 variable "vpc_range" {
-  default = "10.19.0.0/21"
-  # 10.19.0.1 - 10.19.7.254
+  default = "10.19.0.0/21"  # 10.19.0.1 - 10.19.7.254
 }
 variable "pub_subnets_ranges" {
   description = "Subnet CIDRs for public subnets (length must match configured availability_zones)"
@@ -27,11 +26,16 @@ variable "priv_subnets_ranges" {
   type = "list"
 }
 variable "ami_id" {
-  default = "ami-026c8acd92718196b"
+  # default = "ami-02f706d959cedf892"  # Amazon Linux 2018.03.0 - us-east-2
+  default = "ami-0986c2ac728528ac2"  # Ubuntu Server 18.04 LTS
+}
+variable "instance_type" {
+  # default = "t2.medium"
+  default = "t2.small"
 }
 variable "user" {
   default = "ubuntu"
 }
 variable "ssh_key" {
-  default = "~/repositorios/terraform/alessander-tf.pub"
+  default = "c:/Users/alessander.viana/alessander_rsa.pub"
 }
